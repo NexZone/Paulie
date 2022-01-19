@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 
-export const generate = {
+const generate = {
     data: new SlashCommandBuilder()
         .setName('generate')
         .setDescription('Generates a random number between 0 and 100'),
@@ -8,4 +8,5 @@ export const generate = {
             let randomNumber = String(Math.floor(Math.random() * 100));
             await interaction.reply(randomNumber);
     }
-}
+};
+export default generate;

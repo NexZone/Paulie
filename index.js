@@ -1,22 +1,23 @@
 // Packages
+import fs from 'fs';
 import { Client, Collection, Intents } from 'discord.js';
 import dotenv from 'dotenv';
-// Commands
-import { ping } from './commands/ping.js';
-import { generate } from './commands/generate.js';
 
 dotenv.config();
 
-// Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+
+client.commands = new Collection();
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+for(const file of commandFiles) {
+    const { default: command } = await import(`./commands/${file}`);
+    client.commands.set(command.data.name, command);
+}
 
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}`);
 });
-
-client.commands = new Collection();
-client.commands.set(ping.data.name, ping);
-client.commands.set(generate.data.name, generate);
 
 client.on('interactionCreate', async interaction => {
     if(!interaction.isCommand()) return;

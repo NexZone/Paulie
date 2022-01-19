@@ -1,16 +1,18 @@
+// Packages
+import * as fs from 'fs';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 import dotenv from 'dotenv';
-import { ping } from '../commands/ping.js';
-import { generate } from '../commands/generate.js';
 
 dotenv.config();
 
-const commands = [
-    ping.data,
-    generate.data,
-]
-    .map(command => command.toJSON());
+const commands = [];
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+for(const file of commandFiles) {
+    const {default: command} = await import(`./commands/${file}`);
+    commands.push(command.data.toJSON());
+}
 
 const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
 
