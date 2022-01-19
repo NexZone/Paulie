@@ -1,2 +1,2 @@
-#Paulie discord Bot
-Coming soon
+# Paulie Discord bot
+README content coming soon
